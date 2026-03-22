@@ -47,7 +47,13 @@ function App() {
 
   const typeMap = Object.fromEntries(types.map((type) => [type.name, type]));
 
-  const effectiveness = {
+  type EffectivenessEntry = {
+    strong: string[];
+    weak: string[];
+    immune: string[];
+  };
+
+  const effectiveness: Record<string, EffectivenessEntry> = {
     Normal: {
       strong: [],
       weak: ['Rock', 'Steel'],
