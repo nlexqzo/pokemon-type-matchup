@@ -321,7 +321,7 @@ function App() {
 
               <div className="flex w-full flex-col gap-4 rounded-2xl p-6 outline md:flex-row md:items-start">
                 <div className="flex flex-1 flex-col">
-                  <h3 className="text-white">Selected Types</h3>
+                  <h3 className="font-bold text-black dark:text-white">Selected Types</h3>
                   <span>选定的类型</span>
                   <span>選んでいるタイプ</span>
                 </div>
