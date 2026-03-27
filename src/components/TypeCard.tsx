@@ -5,22 +5,26 @@ type TypeCardProps = {
   color: string;
   icon: string;
   className?: string;
+  onClick?: () => void;
+  isSelected?: boolean;
 };
 
-function TypeCard({ name, jp, cn, color, icon, className = '' }: TypeCardProps) {
+function TypeCard({ name, jp, cn, color, icon, className = '', onClick, isSelected = false }: TypeCardProps) {
+  const Component = onClick ? 'button' : 'div';
   return (
-    <div
-      className={`${color} flex gap-2 h-full w-full flex-col items-center justify-center rounded-xl p-4 outline-2 outline-black dark:outline-white ${className}`}
+    <Component
+      onClick={onClick}
+      className={`${color} flex h-full w-full flex-col items-center gap-2 rounded-xl p-6 text-center outline-2 outline-black transition-transform transition-opacity dark:outline-white ${onClick ? 'hover:scale-105' : ''} ${isSelected ? 'ring-4 ring-black dark:ring-white opacity-100' : ''} ${className}`.trim()}
     >
-      <div className="w-full h-full">
-        <img src={icon} />
+      <div className="w-16 h-16">
+        <img src={icon} alt={`${name} type icon`} className="h-full w-full" />
       </div>
       <div className="flex flex-col">
-        <span className="font-bold">{name}</span>
+        <span className="text-lg font-extrabold tracking-tight">{name}</span>
         <span className="text-xs opacity-50">{cn}</span>
         <span className="text-xs opacity-50">{jp}</span>
       </div>
-    </div>
+    </Component>
   );
 }
 

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import './App.css';
 import TypeCard from './components/TypeCard';
 
@@ -53,6 +54,7 @@ type MatchupSectionProps = {
   typeMap: Record<PokemonType, TypeMeta>;
   emphasisClassName?: string;
   columnsClassName?: string;
+  animateItems?: boolean;
 };
 
 const types: TypeMeta[] = [
@@ -231,7 +233,8 @@ function MatchupSection({
   types,
   typeMap,
   emphasisClassName = '',
-  columnsClassName = 'grid-cols-2 md:grid-cols-3'
+  columnsClassName = 'grid-cols-2 md:grid-cols-3',
+  animateItems = false
 }: MatchupSectionProps) {
   return (
     <div className="flex w-full flex-col gap-4">
@@ -245,21 +248,49 @@ function MatchupSection({
 
       <ul className={`grid w-full gap-4 ${columnsClassName}`}>
         {types.length > 0 ? (
-          types.map((type) => {
-            const currentType = typeMap[type];
-            return (
-              <li key={type} className="h-full">
-                <TypeCard
-                  name={currentType.name}
-                  jp={currentType.jp}
-                  cn={currentType.cn}
-                  color={currentType.color}
-                  icon={currentType.icon}
-                  className={`h-full w-full ${emphasisClassName}`.trim()}
-                />
-              </li>
-            );
-          })
+          animateItems ? (
+            <AnimatePresence mode="popLayout">
+              {types.map((type) => {
+                const currentType = typeMap[type];
+                return (
+                  <motion.li
+                    layout
+                    key={type}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    className="h-full"
+                  >
+                    <TypeCard
+                      name={currentType.name}
+                      jp={currentType.jp}
+                      cn={currentType.cn}
+                      color={currentType.color}
+                      icon={currentType.icon}
+                      className={`h-full w-full ${emphasisClassName}`.trim()}
+                    />
+                  </motion.li>
+                );
+              })}
+            </AnimatePresence>
+          ) : (
+            types.map((type) => {
+              const currentType = typeMap[type];
+              return (
+                <li key={type} className="h-full">
+                  <TypeCard
+                    name={currentType.name}
+                    jp={currentType.jp}
+                    cn={currentType.cn}
+                    color={currentType.color}
+                    icon={currentType.icon}
+                    className={`h-full w-full ${emphasisClassName}`.trim()}
+                  />
+                </li>
+              );
+            })
+          )
         ) : (
           <li className="col-span-full flex h-full w-full flex-col justify-center rounded-xl p-4 opacity-40">
             <div className="flex flex-col">
@@ -327,39 +358,66 @@ function App() {
                 </p>
               </div>
 
-              <div className="flex w-full flex-col gap-4 rounded-2xl p-6 outline-2">
-                <div className="flex flex-1 flex-col">
-                  <h3 className="font-bold text-black dark:text-white">Selected Types</h3>
-                  <span>选定的类型</span>
-                  <span>選んでいるタイプ</span>
+              <div className="flex w-full flex-col gap-6 rounded-2xl p-6 outline-2">
+                <div className="flex flex-row gap-4">
+                  <div className="flex flex-1 flex-col">
+                    <h3 className="font-bold text-black dark:text-white">Selected Types</h3>
+                    <span>选定的类型</span>
+                    <span>選んでいるタイプ</span>
+                  </div>
+                  <button
+                    onClick={() => setOpponentTypes([])}
+                    className="dark:text-black text-white dark:bg-white bg-black hover:scale-105 transition-transform rounded-full px-4 py-2 h-fit w-fit"
+                  >
+                    Reset
+                  </button>
                 </div>
 
-                <ul className="grid w-full flex-1 grid-cols-2 gap-4">
-                  {opponentTypes.length > 0 ? (
-                    opponentTypes.map((type) => {
-                      const currentType = typeMap[type];
-                      return (
-                        <li key={type} className="h-full">
-                          <TypeCard
-                            name={currentType.name}
-                            jp={currentType.jp}
-                            cn={currentType.cn}
-                            color={currentType.color}
-                            icon={currentType.icon}
-                            className="h-full w-full"
-                          />
-                        </li>
-                      );
-                    })
-                  ) : (
-                    <p className="flex flex-col gap-1 opacity-50">
-                      <span className="text-xs dark:text-white text-black">Select up to 2 types</span>
-                      <div className="flex flex-col">
-                        <span className="text-xs">最多选择2种类型</span>
-                        <span className="text-xs">最大2個までタイプを選択してください</span>
-                      </div>
-                    </p>
-                  )}
+                <ul
+                  className={`grid w-full flex-1 gap-6 ${
+                    opponentTypes.length === 1 ? 'grid-cols-1 justify-items-center' : 'grid-cols-2'
+                  }`}
+                >
+                  <AnimatePresence mode="popLayout">
+                    {opponentTypes.length > 0 ? (
+                      opponentTypes.map((type) => {
+                        const currentType = typeMap[type];
+                        return (
+                          <motion.li
+                            layout
+                            key={type}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                            className={`h-full ${opponentTypes.length === 1 ? 'w-1/2' : 'w-full'}`}
+                          >
+                            <TypeCard
+                              name={currentType.name}
+                              jp={currentType.jp}
+                              cn={currentType.cn}
+                              color={currentType.color}
+                              icon={currentType.icon}
+                              className="h-full w-full outline-4"
+                            />
+                          </motion.li>
+                        );
+                      })
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.5 }}
+                        exit={{ opacity: 0 }}
+                        className="flex flex-col gap-1 opacity-50"
+                      >
+                        <span className="text-xs dark:text-white text-black">Select up to 2 types</span>
+                        <div className="flex flex-col">
+                          <span className="text-xs">最多选择2种类型</span>
+                          <span className="text-xs">2個までタイプを選択してください</span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </ul>
               </div>
             </div>
@@ -367,25 +425,16 @@ function App() {
             <ul className="grid w-full grid-cols-2 gap-4 md:grid-cols-3">
               {types.map((type) => (
                 <li key={type.name} className="h-full">
-                  <button
+                  <TypeCard
+                    name={type.name}
+                    jp={type.jp}
+                    cn={type.cn}
+                    color={type.color}
+                    icon={type.icon}
                     onClick={() => handleSelectOpponentType(type.name)}
-                    className={`hover:scale-105 transition-transform flex h-full w-full flex-col justify-center rounded-xl p-4 gap-2 outline-2 outline-black transition-opacity dark:outline-white ${type.color} ${
-                      opponentTypes.includes(type.name)
-                        ? 'ring-4 ring-black dark:ring-white opacity-100'
-                        : opponentTypes.length > 0
-                          ? 'opacity-40'
-                          : 'opacity-100'
-                    }`}
-                  >
-                    <div className="w-full h-full">
-                      <img src={type.icon} />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold">{type.name}</span>
-                      <span className="text-xs opacity-50">{type.cn}</span>
-                      <span className="text-xs opacity-50">{type.jp}</span>
-                    </div>
-                  </button>
+                    isSelected={opponentTypes.includes(type.name)}
+                    className={`${opponentTypes.length > 0 && !opponentTypes.includes(type.name) ? 'opacity-40' : 'opacity-100'}`}
+                  />
                 </li>
               ))}
             </ul>
@@ -402,6 +451,7 @@ function App() {
               types={matchup?.quadrupleEffective ?? []}
               typeMap={typeMap}
               emphasisClassName="ring-4 ring-black dark:ring-white"
+              animateItems
             />
 
             <MatchupSection
@@ -411,6 +461,7 @@ function App() {
               types={matchup?.superEffective ?? []}
               typeMap={typeMap}
               emphasisClassName="ring-4 ring-black dark:ring-white"
+              animateItems
             />
 
             <MatchupSection
