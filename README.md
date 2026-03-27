@@ -38,9 +38,8 @@ npm run dev
 
 ## Credits
 
-- Pokémon type icons
-  Source: [pokemon-type-icons](https://github.com/partywhale/pokemon-type-icons)
-  Author: partywhale
+- Pokémon type icons by partywhale
+  https://github.com/partywhale/pokemon-type-icons
 
 ## License
 
