@@ -1,12 +1,8 @@
-# Pokémon Type Matchup
+# [Pokémon Type Matchup](https://pokemon-type-matchup-one.vercel.app)
 
 Pokémon Type Matchup is an app to instantly find the most effective attack types against your opponent.
 
-![Project Screenshot](/screenshot.png)
-
-## Demo
-
-[Live Demo](https://pokemon-type-matchup-one.vercel.app)
+![Project Screenshot](screenshot.png)
 
 ## Features
 
@@ -27,19 +23,9 @@ Pokémon Type Matchup is an app to instantly find the most effective attack type
 - Tailwind CSS
 - Motion
 
-## Installation
-
-```bash
-git clone https://github.com/nbtrnx/pokemon-type-matchup.git
-cd pokemon-type-matchup
-npm install
-npm run dev
-```
-
 ## Credits
 
-- Pokémon type icons by partywhale
-  https://github.com/partywhale/pokemon-type-icons
+- Pokémon type icons by [partywhale](https://github.com/partywhale/pokemon-type-icons)
 
 ## License
 
